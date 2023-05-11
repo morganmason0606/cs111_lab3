@@ -7,8 +7,8 @@
 
 #include <pthread.h>
 
-//Added
-pthread_mutex_t lock;
+
+pthread_mutex_t lock;//Added
 
 struct list_entry {
 	const char *key;
@@ -28,10 +28,10 @@ struct hash_table_v1 {
 
 struct hash_table_v1 *hash_table_v1_create()
 {
-	//Added
+	
 	if (pthread_mutex_init(&lock, NULL) != 0) {
         exit(1);
-    }
+    }//Added
 
 	struct hash_table_v1 *hash_table = calloc(1, sizeof(struct hash_table_v1));
 	assert(hash_table != NULL);
@@ -113,8 +113,8 @@ uint32_t hash_table_v1_get_value(struct hash_table_v1 *hash_table,
 
 void hash_table_v1_destroy(struct hash_table_v1 *hash_table)
 {
-	//Added
-	pthread_mutex_destroy(&lock);
+	
+	pthread_mutex_destroy(&lock);//Added
 
 	for (size_t i = 0; i < HASH_TABLE_CAPACITY; ++i) {
 		struct hash_table_entry *entry = &hash_table->entries[i];
