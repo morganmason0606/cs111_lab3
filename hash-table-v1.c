@@ -7,6 +7,9 @@
 
 #include <pthread.h>
 
+//Added
+pthread_mutex_t lock;
+
 struct list_entry {
 	const char *key;
 	uint32_t value;
@@ -25,6 +28,11 @@ struct hash_table_v1 {
 
 struct hash_table_v1 *hash_table_v1_create()
 {
+	//Added
+	if (pthread_mutex_init(&lock, NULL) != 0) {
+        exit(1);
+    }
+
 	struct hash_table_v1 *hash_table = calloc(1, sizeof(struct hash_table_v1));
 	assert(hash_table != NULL);
 	for (size_t i = 0; i < HASH_TABLE_CAPACITY; ++i) {
@@ -72,8 +80,11 @@ void hash_table_v1_add_entry(struct hash_table_v1 *hash_table,
                              const char *key,
                              uint32_t value)
 {
+	pthread_mutex_lock(&lock);//Added
+
 	struct hash_table_entry *hash_table_entry = get_hash_table_entry(hash_table, key);
 	struct list_head *list_head = &hash_table_entry->list_head;
+
 	struct list_entry *list_entry = get_list_entry(hash_table, key, list_head);
 
 	/* Update the value if it already exists */
@@ -86,6 +97,8 @@ void hash_table_v1_add_entry(struct hash_table_v1 *hash_table,
 	list_entry->key = key;
 	list_entry->value = value;
 	SLIST_INSERT_HEAD(list_head, list_entry, pointers);
+
+	pthread_mutex_unlock(&lock);//Added
 }
 
 uint32_t hash_table_v1_get_value(struct hash_table_v1 *hash_table,
@@ -100,6 +113,9 @@ uint32_t hash_table_v1_get_value(struct hash_table_v1 *hash_table,
 
 void hash_table_v1_destroy(struct hash_table_v1 *hash_table)
 {
+	//Added
+	pthread_mutex_destroy(&lock);
+
 	for (size_t i = 0; i < HASH_TABLE_CAPACITY; ++i) {
 		struct hash_table_entry *entry = &hash_table->entries[i];
 		struct list_head *list_head = &entry->list_head;
