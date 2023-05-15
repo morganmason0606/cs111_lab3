@@ -7,7 +7,7 @@
 
 #include <pthread.h>
 
-pthread_mutex_t locks[HASH_TABLE_CAPACITY];
+pthread_mutex_t locks[HASH_TABLE_CAPACITY];//Added
 
 struct list_entry {
 	const char *key;
