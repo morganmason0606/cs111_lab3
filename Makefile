@@ -23,3 +23,6 @@ hash-table-tester: $(OBJS)
 .PHONY: clean
 clean:
 	rm -f $(OBJS) hash-table-tester
+
+tar:
+	tar -cvf * 705747359.tar
