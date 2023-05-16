@@ -91,21 +91,27 @@ void hash_table_v2_add_entry(struct hash_table_v2 *hash_table,
 	toadd->value = value;
 
 	
-	pthread_mutex_lock(&hash_table->locks[index]);//Added
+	if(pthread_mutex_lock(&hash_table->locks[index]!=0)){
+		exit(1);
+	}//Added
 
 	struct list_entry *list_entry = get_list_entry(hash_table, key, list_head);
 
 	/* Update the value if it already exists */
 	if (list_entry != NULL) {
 		list_entry->value = value;
-		pthread_mutex_unlock(&hash_table->locks[index]);//Added
+		if(pthread_mutex_unlock(&hash_table->locks[index])!=0){
+			exit(1);
+		}//Added
 		free(toadd);
 		return;
 	}
 
 	SLIST_INSERT_HEAD(list_head, toadd, pointers);
 	
-	pthread_mutex_unlock(&hash_table->locks[index]);//Added
+	if(pthread_mutex_unlock(&hash_table->locks[index])!=0){
+		exit(1)
+	};//Added
 }
 
 uint32_t hash_table_v2_get_value(struct hash_table_v2 *hash_table,
