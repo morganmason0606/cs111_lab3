@@ -25,4 +25,4 @@ clean:
 	rm -f $(OBJS) hash-table-tester
 
 tar:
-	tar -cvf * 705747359.tar
+	@tar -cf 705747359.tar hash-table-base.c hash-table-base.h hash-table-common.c hash-table-common.h hash-table-tester.c hash-table-v1.c hash-table-v1.h hash-table-v2.h hash-table-v2.c Makefile README.md test_lab.py
